@@ -1,0 +1,5 @@
+*{margin: 0; padding: 0;}
+h1.display-3.text-xs-center {
+    color: brown;
+    font-weight: bold;
+}
