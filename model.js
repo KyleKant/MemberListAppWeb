@@ -1,5 +1,5 @@
 var	app = angular.module('myApp', ['ngMaterial']);
-app.controller('MyController', function ($scope, $http) {
+app.controller('MyController', function ($scope, $http, $mdToast, $log) {
 	$scope.contentText = "Enter text here!"
 	$scope.showTextBox = true;
 	// $scope.showEditMode	= true;
@@ -35,37 +35,82 @@ app.controller('MyController', function ($scope, $http) {
 		$http.post('http://localhost/angular_php/index.php/welcome/updatedata', data, config).then(function(response){
 			if(response.data == "Success"){
 				console.log("Update Data Successfull!");
+				$scope.showNoticeUpdateSuccessfully();
 			}			
 		}, function(response){
 			if(response.data == "Fail"){
-				console.log("Update Data Failure!")
+				console.log("Update Data Failure!");
+				$scope.showNoticeUpdateFailure();
 			}
 		});
 	}
-/*	$scope.memberList = [
-		{
-			name:"Thi",
-			age:"24",
-			facebook:"fb.com/thinguyen",
-			numberphone:"0915727441"
-		},
-		{
-			name:"Son",
-			age:"24",
-			facebook:"fb.com/sontran",
-			numberphone:"0915723324"
-		},
-		{
-			name:"Nhi",
-			age:"22",
-			facebook:"fb.com/nhihoang",
-			numberphone:"0336727441"
-		},
-		{
-			name:"Cuong",
-			age:"26",
-			facebook:"fb.com/cuongdola",
-			numberphone:"0915123441"
+
+	var last = {
+	    bottom: true,
+	    top: false,
+	    left: false,
+	    right: true
+	};
+
+	$scope.toastPosition = angular.extend({}, last);
+
+	$scope.getToastPosition = function() {
+		sanitizePosition();
+
+		return Object.keys($scope.toastPosition)
+		.filter(function(pos) {
+			return $scope.toastPosition[pos];
+		}).join(' ');
+	};
+
+	function sanitizePosition() {
+		var current = $scope.toastPosition;
+
+		if (current.bottom && last.top) {
+			current.top = false;
 		}
-	];*/
+		if (current.top && last.bottom) {
+			current.bottom = false;
+		}
+		if (current.right && last.left) {
+			current.left = false;
+		}
+		if (current.left && last.right) {
+			current.right = false;
+		}
+
+		last = angular.extend({}, current);
+	};
+
+	$scope.showNoticeUpdateSuccessfully = function() {
+		var pinTo = $scope.getToastPosition();
+
+		$mdToast.show(
+			$mdToast.simple()
+			.textContent('Update Data Succesfull!')
+			.position(pinTo)
+			.hideDelay(1000))
+		.then(function() {
+			$log.log('Toast dismissed.');
+		})
+		.catch(function() {
+			$log.log('Toast failed or was forced to close early by another toast.');
+		});
+	};
+
+	$scope.showNoticeUpdateFailure = function() {
+		var pinTo = $scope.getToastPosition();
+
+		$mdToast.show(
+			$mdToast.simple()
+			.textContent('Update Data Failure!')
+			.position(pinTo)
+			.hideDelay(1000))
+		.then(function(){
+			$log.log('Toast dismissed.')
+		})
+		.catch(function(){
+			$log.log('Toast failed or was forced to close eraly by another toast.')
+		});
+	};
 })

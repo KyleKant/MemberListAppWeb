@@ -14,6 +14,13 @@
 		<div class="container">
 			<div class="jumbotron">
 				<h1 class="display-3 text-xs-center">Member List:</h1>
+				<!-- <p>
+					<div layout="row" layout-align="space-around">
+						<md-button ng-click="showNoticeUpdateSuccessfully()">
+							Show Simple
+						</md-button>
+					</div>
+				</p> -->
 				<div ng-repeat="member in memberList" ng-init="member.show=true">
 					<div class="card" ng-show="!member.show">
 						<div class="card-header">
@@ -32,10 +39,12 @@
 							<b>Number phone: </b>
 							<input type="text" class="form-control" ng-model="member.numberphone">
 							<br><br>
-							<b class="float-xs-right btn btn-outline-success btn btn-block" ng-click="updatedata(member)">Save</b>
+							<b class="float-xs-right btn btn-outline-success btn btn-block" 
+								ng-click="updatedata(member)"
+								ng-click="showNoticeUpdateSuccessfully()">Save</b>
 						</div>
 					</div>
-					<div class="card" ng-show="member.show">
+					<div class="card text-xs-center" ng-show="member.show">
 						<div class="card-header">
 							<b class="float-xs-right"><i class="fa fa-pencil btn btn-outline-danger" ng-click="editMode(member)"></i></b>
 							<b>Information about {{member.name}}:</b>
